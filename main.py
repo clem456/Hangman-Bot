@@ -146,12 +146,37 @@ async def guess(ctx, *, msg=None):
 
         geussed_letters.append(msg.lower())
 
-        await ctx.send(msg.upper()+" is not in word\n"+hanging.hanging[lives])
+        all_str = ""
+
+        for index, hanging_str in enumerate(hanging.hanging[lives], 1):
+            print(hanging_str)
+
+            if index == 1:
+                all_str += hanging_str
+            else:
+                all_str += "\n"+hanging_str
+
+        await ctx.send(msg.upper()+" is not in word\n"+all_str)
     
     if playing[str(ctx.author.id)]['lives'] == 0:
         del playing[str(ctx.author.id)]
 
         await ctx.send("your word was "+translated)
+
+@bot.command()
+async def stop(ctx, *, msg=None):
+    global playing
+
+    if msg.lower() != start_cmd:
+        return
+    elif str(ctx.author.id) in playing:
+        return
+
+    if msg.lower() == start_cmd:
+        del playing[str(ctx.author.id)]
+
+        ctx.send(ctx.author.mention+" has stopped playing hangman")
+        
 
 @bot.command()
 async def steps(ctx):
